@@ -26,8 +26,18 @@ cmsDriver.py step2 --filein file:EXO-PhaseIITDRFall17DR-00016_step1.root --fileo
 ```
 Running the sequence:
 ```
+cmsrel CMSSW_9_3_6
+cd CMSSW_9_3_6/src/
+cmsenv
+cd ../../
 cmsRun EXO-PhaseIITDRFall17GS-00014_1_cfg.py
+
+cmsrel CMSSW_9_3_2
+cd CMSSW_9_3_2/src/
+cmsenv
+cd ../../
 cmsRun EXO-PhaseIITDRFall17DR-00016_1_cfg.py
+
 cmsRun EXO-PhaseIITDRFall17DR-00016_2_cfg.py
 ```
 
