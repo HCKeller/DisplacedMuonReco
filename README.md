@@ -24,3 +24,11 @@ cmsDriver.py step1 --filein "file:EXO-PhaseIITDRFall17GS-00014.root" --fileout f
 
 cmsDriver.py step2 --filein file:EXO-PhaseIITDRFall17DR-00016_step1.root --fileout file:EXO-PhaseIITDRFall17DR-00016.root --mc --eventcontent RECOSIM --runUnscheduled --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM-RECO --conditions 93X_upgrade2023_realistic_v2 --beamspot HLLHC14TeV --step RAW2DIGI,L1Reco,RECO --nThreads 8 --geometry Extended2023D17 --era Phase2_timing --python_filename EXO-PhaseIITDRFall17DR-00016_2_cfg.py --no_exec -n 10
 ```
+Running the sequence:
+```
+cmsRun EXO-PhaseIITDRFall17GS-00014_1_cfg.py
+cmsRun EXO-PhaseIITDRFall17DR-00016_1_cfg.py
+cmsRun EXO-PhaseIITDRFall17DR-00016_2_cfg.py
+```
+
+Running the Analyzer:
