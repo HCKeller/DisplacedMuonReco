@@ -62,6 +62,17 @@ process.RECOSIMoutput = cms.OutputModule("PoolOutputModule",
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '93X_upgrade2023_realistic_v2', '')
 
+# Add analyzer for seeds of outIn
+from RecoTracker.SpecialSeedGenerators.outInSeedsFromStandaloneMuons_cfi import *
+process.muonSeeds = cms.EDAnalyzer("MuonSeedsAnalyzer",
+    #~ L2pt = cms.InputTag("outInSeedsFromStandaloneMuons:L2pt"),
+    #~ L2eta = cms.InputTag("outInSeedsFromStandaloneMuons:L2eta"),
+    #~ NumSeeds = cms.InputTag("outInSeedsFromStandaloneMuons:NumSeeds"),
+    NumSeeds = cms.InputTag("muonSeededSeedsOutIn:NumSeeds"),
+)
+
+process.muonSeeds_step = cms.Path(process.muonSeeds)
+
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
@@ -70,7 +81,8 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.RECOSIMoutput_step = cms.EndPath(process.RECOSIMoutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOSIMoutput_step)
+process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOSIMoutput_step,process.muonSeeds_step)
+#~ process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOSIMoutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
