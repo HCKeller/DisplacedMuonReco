@@ -24,13 +24,16 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10)
+    input = cms.untracked.int32(1000)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:EXO-PhaseIITDRFall17DR-00016_step1.root'),
-    secondaryFileNames = cms.untracked.vstring()
+    #~ fileNames = cms.untracked.vstring('file:EXO-PhaseIITDRFall17DR-00016_step1.root'),
+    fileNames = cms.untracked.vstring('file:MuonGun_DR_step1.root'),
+    #~ fileNames = cms.untracked.vstring(),
+    secondaryFileNames = cms.untracked.vstring(),
+    eventsToProcess = cms.untracked.VEventRange('1:1-1:2')
 )
 
 process.options = cms.untracked.PSet(
@@ -63,15 +66,33 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '93X_upgrade2023_realistic_v2', '')
 
 # Add analyzer for seeds of outIn
-from RecoTracker.SpecialSeedGenerators.outInSeedsFromStandaloneMuons_cfi import *
+#~ from RecoMuon.Configuration.DisplacedMuonSeededStep_cff import muonSeededSeedsOutInDisplaced
+
 process.muonSeeds = cms.EDAnalyzer("MuonSeedsAnalyzer",
-    #~ L2pt = cms.InputTag("outInSeedsFromStandaloneMuons:L2pt"),
-    #~ L2eta = cms.InputTag("outInSeedsFromStandaloneMuons:L2eta"),
-    #~ NumSeeds = cms.InputTag("outInSeedsFromStandaloneMuons:NumSeeds"),
-    NumSeeds = cms.InputTag("muonSeededSeedsOutIn:NumSeeds"),
+    tkpt = cms.InputTag("muonSeededSeedsOutIn:tkpt"),
+    tketa = cms.InputTag("muonSeededSeedsOutIn:tketa"),
+    tkphi = cms.InputTag("muonSeededSeedsOutIn:tkphi"),
+    tkd0 = cms.InputTag("muonSeededSeedsOutIn:tkd0"),
+    tkdxy = cms.InputTag("muonSeededSeedsOutIn:tkdxy"),
+    tkDisplacedpt = cms.InputTag("muonSeededSeedsOutInDisplaced:tkpt"),
+    tkDisplacedeta = cms.InputTag("muonSeededSeedsOutInDisplaced:tketa"),
+    tkDisplacedphi = cms.InputTag("muonSeededSeedsOutInDisplaced:tkphi"),
+    tkDisplacedd0 = cms.InputTag("muonSeededSeedsOutInDisplaced:tkd0"),
+    tkDisplaceddxy = cms.InputTag("muonSeededSeedsOutInDisplaced:tkdxy"),
+    MuonSeededSeedsOutInDisplacedNumSeeds = cms.InputTag("muonSeededSeedsOutInDisplaced:NumSeeds"),
+    MuonSeededSeedsOutInNumSeeds = cms.InputTag("muonSeededSeedsOutIn:NumSeeds"),
+    earlyDisplacedMuons = cms.InputTag("earlyDisplacedMuons"),
+    genParticles = cms.InputTag("genParticles"),
+    MuonSeededTracksOutInDisplaced = cms.InputTag("muonSeededTracksOutInDisplaced"),
+    MuonSeededTrackCandidatesOutInDisplaced = cms.InputTag("muonSeededTrackCandidatesOutInDisplaced"),
+    #~ MuonSeededTracksOutInDisplacedClassifier = cms.InputTag("muonSeededTracksOutInDisplacedClassifier"),
 )
 
 process.muonSeeds_step = cms.Path(process.muonSeeds)
+
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string('MuonSeeds.root')
+)
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -87,7 +108,7 @@ from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
 #Setup FWK for multithreaded
-process.options.numberOfThreads=cms.untracked.uint32(8)
+process.options.numberOfThreads=cms.untracked.uint32(1)
 process.options.numberOfStreams=cms.untracked.uint32(0)
 
 # customisation of the process.
